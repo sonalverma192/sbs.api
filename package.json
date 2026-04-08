@@ -1,0 +1,23 @@
+{
+  "name": "backend-course",
+  "version": "1.0.0",
+  "description": "rest api",
+  "keywords": [
+    "rest",
+    "api"
+  ],
+  "license": "ISC",
+  "author": "sonal",
+  "type": "commonjs",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "body-parser": "^2.2.2",
+    "express": "^5.2.1",
+    "mongoose": "^9.3.3",
+    "nodemon": "^3.1.14"
+  }
+}
