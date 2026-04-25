@@ -24,8 +24,8 @@ const connectWithDatabase = async()=>{
     }
     catch(err)
     {
-        console.log(err)
-        console.log('something is wrong')
+     console.log(err)
+     console.log('something is wrong')
     }
 }
 
