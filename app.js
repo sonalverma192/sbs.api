@@ -5,6 +5,7 @@ const userRoute = require('./Router/user')
 const contactRoute = require('./Router/contact')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
+const fileUpload = require('express-fileupload')
 
 // mongoose.connect('')
 // .then(()=>{
@@ -18,7 +19,7 @@ const bodyParser = require('body-parser')
 const connectWithDatabase = async()=>{
     try
     {
-       await mongoose.connect(process.env.MONGODB_URL)
+       await mongoose.connect(process.env.MONGODATABASE_URL)
        console.log('connected with database')
     }
     catch(err)
@@ -32,6 +33,11 @@ connectWithDatabase()
 
 app.use(bodyParser.urlencoded())
 app.use(bodyParser.json())
+app.use(fileUpload({
+useTempFiles : true,
+tempFileDir : '/temp/'
+}
+))
 
 app.use('/user',userRoute)
 app.use('/contact',contactRoute)
