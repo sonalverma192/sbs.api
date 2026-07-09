@@ -8,7 +8,7 @@ const jwt = require('jsonwebtoken')
 Router.post('/signup',async(req,res)=>{
     try
     {
-      console.log(req.body)
+      // console.log(req.body)
       const user = await User.find({email:req.body.email})
       if(user.length > 0){
         return res.status(200).json({
@@ -16,7 +16,7 @@ Router.post('/signup',async(req,res)=>{
         })
       }
       const hash = await bcrypt.hash(req.body.password,10)
-      console.log(hash)
+    //   console.log(hash)
       const newUser = new User ({
       fullName:req.body.fullName,
       email:req.body.email,
@@ -36,7 +36,7 @@ Router.post('/signup',async(req,res)=>{
 }
     catch(err)
     {
-        console.log(err)
+        // console.log(err)
         res.status(500).json({
             error : err
         })
@@ -49,7 +49,7 @@ Router.post('/login',async(req,res)=>{
     try
     {
         const user = await User.find({email:req.body.email})
-        console.log(user)
+        // // console.log(user)
         if(user.length == 0)
         {
             return res.status(500).json({
@@ -57,6 +57,7 @@ Router.post('/login',async(req,res)=>{
             })
         }
         const isMatch = await bcrypt.compare(req.body.password,user[0].password)
+        // console.log(isMatch)
         if(!isMatch)
         {
             return res.sendStatus(500).json({
