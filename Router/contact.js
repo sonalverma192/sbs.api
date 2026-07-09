@@ -49,6 +49,10 @@ Router.post('/add-contact', async (req, res) => {
       console.log("Body:", req.body);
       console.log("Files:", req.files);
       console.log("Photo:", req.files?.photo);
+      console.log(req.files);
+      console.log(req.files?.photo);
+      console.log(req.files?.photo?.tempFilePath);
+      console.log(req.body);
       const uploadResult = await cloudinary.uploader.upload(req.files.photo.tempFilePath)
       console.log("Uploading to Cloudinary...");
       console.log(uploadResult)
