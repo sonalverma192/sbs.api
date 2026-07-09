@@ -53,6 +53,13 @@ Router.post('/add-contact', async (req, res) => {
       console.log(req.files?.photo);
       console.log(req.files?.photo?.tempFilePath);
       console.log(req.body);
+      console.log("Files:", req.files);
+
+if (!req.files || !req.files.photo) {
+    return res.status(400).json({
+        message: "Photo not received"
+    });
+}
       const uploadResult = await cloudinary.uploader.upload(req.files.photo.tempFilePath)
       console.log("Uploading to Cloudinary...");
       console.log(uploadResult)
@@ -74,10 +81,16 @@ Router.post('/add-contact', async (req, res) => {
    }
    catch (err) {
       console.log(err)
-      res.status(500).json({
-         error: err
-      })
-   }
+
+    return res.status(500).json({
+        message: err.message,
+        stack: err.stack
+    });
+}
+   //    res.status(500).json({
+   //       error: err
+   //    })
+   // }
 })
 
 
@@ -86,7 +99,7 @@ Router.get('/all-contact', async (req, res) => {
    try {
       const token = req.headers.authorization.split(" ")[1]
       const tokenData = await jwt.verify(token, process.env.SEC_KEY)
-      const allContact = await Contact.find({ userId: tokenData.userId }).select("_id fullName email phone address gender userId").populate('userId', 'fullName email')
+      const allContact = await Contact.find({ userId: tokenData.userId }).select("_id fullName email phone imageUrl address gender userId").populate('userId', 'fullName email')
       res.status(200).json({
          contacts: allContact
       })
