@@ -55,11 +55,11 @@ Router.post('/add-contact', async (req, res) => {
       console.log(req.body);
       console.log("Files:", req.files);
 
-if (!req.files || !req.files.photo) {
-    return res.status(400).json({
-        message: "Photo not received"
-    });
-}
+      if (!req.files || !req.files.photo) {
+         return res.status(400).json({
+            message: "Photo not received"
+         });
+      }
       const uploadResult = await cloudinary.uploader.upload(req.files.photo.tempFilePath)
       console.log("Uploading to Cloudinary...");
       console.log(uploadResult)
@@ -82,11 +82,11 @@ if (!req.files || !req.files.photo) {
    catch (err) {
       console.log(err)
 
-    return res.status(500).json({
-        message: err.message,
-        stack: err.stack
-    });
-}
+      return res.status(500).json({
+         message: err.message,
+         stack: err.stack
+      });
+   }
    //    res.status(500).json({
    //       error: err
    //    })
@@ -197,7 +197,7 @@ Router.delete('/byGender/:g', async (req, res) => {
       const tokenData = await jwt.verify(token, process.env.SEC_KEY)
       await Contact.deleteMany({ gender: req.params.g, userId: tokenData.userId })
       res.status(200).json({
-         msg: `All contactof this gender is deleted .....`
+         msg: `All contact of this gender is deleted .....`
       })
 
    }
@@ -274,6 +274,36 @@ Router.get('/count', async (req, res) => {
       })
    }
 
+})
+
+Router.get('/dashboard', async (req, res) => {
+   try {
+      const token = req.headers.authorization.split(" ")[1]
+      const tokenData = await jwt.verify(token, process.env.SEC_KEY)
+      const data = await Contact.countDocuments({ userId: tokenData.userId })
+      const maleCount = await Contact.countDocuments({ userId: tokenData.userId, gender: 'Male' })
+      const femaleCount = await Contact.countDocuments({ userId: tokenData.userId, gender: 'Female' })
+      const recentContacts = await Contact.find({ userId: tokenData.userId }).sort({ _id: -1 }).limit(5);
+      res.status(200).json({
+         count: data,
+         maleCount: maleCount,
+         femaleCount: femaleCount,
+         recentContacts: recentContacts
+      })
+      // console.log("Female Count:", femaleCount);
+      // const allContacts = await Contact.find({ userId: tokenData.userId });
+
+      // allContacts.forEach(contact => {
+      //    console.log("Gender =", JSON.stringify(contact.gender));
+      // });
+   }
+
+   catch (err) {
+      console.log(err)
+      res.status(500).json({
+         error: err
+      })
+   }
 })
 
 
